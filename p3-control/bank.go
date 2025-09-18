@@ -1,9 +1,16 @@
 package main
 
-import "fmt"
+import (
+	"errors"
+	"fmt"
+	"os"
+	"strconv"
+)
+
+const accountFile = "account.txt"
 
 func main() {
-	var accountBalance float64 = 1000
+	// var accountBalance float64 = readBalanceFromTheFile()
 	fmt.Println("Welcome to Go Bank")
 	for {
 		fmt.Println("Select an action: ")
@@ -13,7 +20,12 @@ func main() {
 		fmt.Println("4. Exit")
 
 		choice := choiseSetter()
-		
+		accountBalance, err := readBalanceFromTheFile()
+		if err != nil {
+			fmt.Println("ERROR")
+			fmt.Println(err)
+			break
+		}
 		switch choice {
 		case 1:
 			fmt.Println("Your balance is: ", accountBalance)
@@ -30,6 +42,8 @@ func main() {
 			fmt.Println("Unknown input.")
 			continue
 		}
+		writeBalance2TheFile(accountBalance)
+
 		// if choice == 1 {
 		// 	fmt.Println("Your balance is: ", accountBalance)
 		// } else if choice == 2 {
@@ -46,7 +60,27 @@ func main() {
 		// 	continue
 		// }
 	}
+	fmt.Println("Googbye")
 
+}
+
+func writeBalance2TheFile(account float64) {
+	accountText := fmt.Sprint(account)
+	os.WriteFile(accountFile, []byte(accountText), 0644)
+}
+
+func readBalanceFromTheFile() (float64, error) {
+	data, err := os.ReadFile(accountFile)
+	if err != nil {
+		return 1000, errors.New("Error during reading the file")
+
+	}
+	balanceText := string(data)
+	balance, err := strconv.ParseFloat(balanceText, 64)
+	if err != nil {
+		return 1000, errors.New("Error during parsing the file")
+	}
+	return balance, nil
 }
 
 func choiseSetter() int {
