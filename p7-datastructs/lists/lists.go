@@ -1,4 +1,4 @@
-package main
+package lists
 
 import (
 	"fmt"
@@ -15,6 +15,8 @@ func main() {
 	fmt.Println(prices)
 	prices = append(prices, 5.99)
 	fmt.Println(prices)
+	var products [4]string
+	fmt.Println(products)
 
 	/*
 		var products [4]string = [4]string{"Book"}
